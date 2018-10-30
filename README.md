@@ -34,4 +34,17 @@ $ pip install -r package.lock
 ```
 
 ### Usage
+On your terminal:
 
+1. Go to the src folder:
+```
+$cd src/
+```
+2. Start the HUG server:
+```
+$hug -f app.py
+```
+Or, in case of production:
+```
+$gunicorn app:__hug_wsgi__
+```
