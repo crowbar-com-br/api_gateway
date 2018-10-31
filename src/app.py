@@ -1,8 +1,10 @@
 import	hug
 import	json
+
 from	models	import MicroService
 
 api = hug.get(on_invalid=hug.redirect.not_found)
+authentication = hug.authentication.basic(hug.authentication.verify('user', 'user'))
 
 def save(data):
 	file = open("data_file.json", "r+")
@@ -23,12 +25,21 @@ def load():
 		data = json.load(read_file)
 	return data
 
-@api.urls('/', version=1)
-def microServices():
+@api.get(
+	'/services',
+	version	=	1,
+	requires=	authentication
+)
+def microServices(body):
 	"""Return the list of avaiables MicroServices"""
 	return load()
 
-@api.urls('/{slug}', version=1, examples='slug=api_gateway')
+@api.get(
+	'/services/{slug}',
+	version	=	1,
+	examples=	'http://localhost:8000/services/api_gateway',
+	requires=	authentication
+)
 def microService(slug):
 	"""Return the requested MicroService"""
 	microServices = load()
@@ -37,7 +48,7 @@ def microService(slug):
 			return microService
 	hug.redirect.not_found()
 
-@api.urls(
+@api.get(
 	'/create',
 	version=1,
 	examples='name=API&description=Description&slug=api_gateway&url=http://www.somethi.ng'
@@ -52,6 +63,5 @@ def is_json(myjson):
 	try:
 		json_object = json.loads(myjson)
 	except:
-		print("FALSO")
 		return False
 	return True
