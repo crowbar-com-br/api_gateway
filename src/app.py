@@ -1,10 +1,10 @@
 import	hug
 import	json
+import	requests
+from	authorization	import auth
+from	models			import MicroService
 
-from	models	import MicroService
-
-api = hug.get(on_invalid=hug.redirect.not_found)
-authentication = hug.authentication.basic(hug.authentication.verify('user', 'user'))
+api 			= hug.get(on_invalid=hug.redirect.not_found)
 
 def save(data):
 	file = open("data_file.json", "r+")
@@ -27,8 +27,7 @@ def load():
 
 @api.get(
 	'/services',
-	version	=	1,
-	requires=	authentication
+	version	=	1
 )
 def microServices(body):
 	"""Return the list of avaiables MicroServices"""
@@ -37,8 +36,7 @@ def microServices(body):
 @api.get(
 	'/services/{slug}',
 	version	=	1,
-	examples=	'http://localhost:8000/services/api_gateway',
-	requires=	authentication
+	examples=	'http://localhost:8000/services/api_gateway'
 )
 def microService(slug):
 	"""Return the requested MicroService"""
@@ -65,3 +63,15 @@ def is_json(myjson):
 	except:
 		return False
 	return True
+
+@api.post(
+	'/authentication'
+)
+def authentication(body):
+	if (is_json(body)):
+		body 		= json.loads(body)
+		username	= body['username']
+		password	= body['password']
+		return auth.getToken(username, password)
+	else:
+		return False
