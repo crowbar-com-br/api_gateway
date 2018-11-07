@@ -7,7 +7,7 @@ class Key:
 	def __init__(self):
 		self.public		= ""
 		self.private	= ""
-		self.newKeys()
+		loadKey(self)
 
 	def newKeys(self):
 		(self.public, self.private) = rsa.newkeys(2048)
@@ -17,6 +17,10 @@ class Key:
 			return False
 		return True
 
+	def setKeys(self, keysData):
+		self.public		= rsa.PublicKey.load_pkcs1(keysData)
+		self.private	= rsa.PrivateKey.load_pkcs1(keysData)
+
 def encryptData(data, key_pub):
 	data = json.dumps(data).encode('utf8')
 	return rsa.encrypt(data, key_pub)
@@ -24,3 +28,16 @@ def encryptData(data, key_pub):
 def decryptData(data, key_pri):
 	data = rsa.decrypt(data, key_pri)
 	return data.decode('utf8')
+
+def loadKey(keys):
+	import os.path
+	if os.path.exists('private.pem'):
+		with open('private.pem', mode='rb') as privatefile:
+			keysData = privatefile.read()
+			keys.setKeys(keysData.decode('utf8'))
+	else:
+		with open('private.pem', mode='w') as file:
+			(pub, pri) = rsa.newkeys(2048)
+			file.write(rsa.PublicKey.save_pkcs1(pub).decode('utf8'))
+			file.write(rsa.PrivateKey.save_pkcs1(pri).decode('utf8'))
+			loadKey(keys)
