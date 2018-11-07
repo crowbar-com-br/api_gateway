@@ -1,7 +1,7 @@
 import	hug
 import	json
 import	requests
-import	cryptKey
+from	cryption		import cryptKey
 from	authorization	import auth
 from	models			import MicroService
 

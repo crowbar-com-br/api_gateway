@@ -30,14 +30,16 @@ def decryptData(data, key_pri):
 	return data.decode('utf8')
 
 def loadKey(keys):
-	import os.path
-	if os.path.exists('private.pem'):
-		with open('private.pem', mode='rb') as privatefile:
+	import os
+	if not os.path.exists('./cache'):
+		os.makedirs('./cache')
+	if os.path.exists('./cache/private.pem'):
+		with open('./cache/private.pem', mode='rb') as privatefile:
 			keysData = privatefile.read()
 			keys.setKeys(keysData.decode('utf8'))
 	else:
-		with open('private.pem', mode='w') as file:
+		with open('./cache/private.pem', mode='w') as file:
 			(pub, pri) = rsa.newkeys(2048)
 			file.write(rsa.PublicKey.save_pkcs1(pub).decode('utf8'))
 			file.write(rsa.PrivateKey.save_pkcs1(pri).decode('utf8'))
-			loadKey(keys)
+		loadKey(keys)
