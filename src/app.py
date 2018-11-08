@@ -1,3 +1,4 @@
+import	base64
 import	hug
 import	json
 import	requests
@@ -63,17 +64,6 @@ def microService(name, description, slug, url):
 	save(microService.__dict__)
 	return microService.__dict__
 
-@api.get()
-def test():
-	cr = cryptKey.encryptData(
-		{
-			"token"	: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
-			"key"	: "asdkfasdfjklhasdfhkalshhh"
-		},
-		key.public)
-	dr = cryptKey.decryptData(cr, key.private)
-	return json.loads(dr)
-
 @api.post(
 	'/authentication',
 	version=1
@@ -84,7 +74,7 @@ def getToken(body):
 		body 		= json.loads(body)
 		username	= body['username']
 		password	= body['password']
-		return auth.getToken(username, password)
+		return auth.getToken(username, password, key)
 	else:
 		return 403
 

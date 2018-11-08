@@ -5,23 +5,34 @@ class Authorization:
 	def __init__(self, token):
 		self.token	= token
 
-def getToken(username, password):
+def getToken(username, password, keys):
 	import	json
 	import	requests
+	from	cryption	import cryptKey
 
 	url = "http://localhost:8080/getToken"
 
 	headers = {
-		'cache-control': "no-cache"
+		'cache-control'	: "no-cache"
 	}
 
 	payload = {
-		'username':	username,
-		'password':	password
+		'username'	: username,
+		'password'	: password
+	}
+
+	auth_pubKey = json.loads(
+		requests.request("GET", "http://localhost:8080/publicKey").text
+	)['publicKey']
+
+	payload	= {
+		'payload'	: cryptKey.encryptData(payload, cryptKey.loadPublic(auth_pubKey)),
+		'publicKey'	: cryptKey.savePublic(keys.public)
 	}
 
 	response = requests.request("POST", url, headers=headers, data=payload)
-	return json.loads(response.text)
+	data = json.loads(response.text)
+	return cryptKey.decryptData(data['payload'], keys.private)
 
 def checkToken(request):
 	import	requests
