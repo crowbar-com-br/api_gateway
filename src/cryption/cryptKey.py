@@ -1,3 +1,4 @@
+import	base64
 import	json
 import	rsa
 
@@ -23,11 +24,19 @@ class Key:
 
 def encryptData(data, key_pub):
 	data = json.dumps(data).encode('utf8')
-	return rsa.encrypt(data, key_pub)
+	return base64.b64encode(rsa.encrypt(data, key_pub))
 
 def decryptData(data, key_pri):
-	data = rsa.decrypt(data, key_pri)
-	return data.decode('utf8')
+	data = rsa.decrypt(base64.b64decode(data), key_pri)
+	return json.loads(data.decode('utf8'))
+
+def loadPublic(publicKey):
+	"""Loads the Public Key from a string"""
+	return rsa.PublicKey.load_pkcs1(publicKey)
+
+def savePublic(publicKey):
+	"""Dumps the Public Key to a String"""
+	return rsa.PublicKey.save_pkcs1(publicKey).decode('utf8')
 
 def loadKey(keys):
 	import os
