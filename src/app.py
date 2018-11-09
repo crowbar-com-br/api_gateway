@@ -2,8 +2,9 @@ import	base64
 import	hug
 import	json
 import	requests
-from	cryption		import cryptKey
 from	authorization	import auth
+from	conx			import connex
+from	cryption		import cryptKey
 from	models			import MicroService
 
 api 				= hug.get(on_invalid=hug.redirect.not_found)
@@ -37,6 +38,10 @@ def load():
 def microServices(body):
 	"""Return the list of avaiables MicroServices"""
 	return load()
+
+@api.get()
+def test(request):
+	return cryptKey.newKey()
 
 @api.get(
 	'/services/{slug}',
