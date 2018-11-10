@@ -127,3 +127,4 @@ def getPublicKey(url):
 	return json.loads(
 		requests.request("GET", url + "/publicKey").text
 	)['publicKey'] # Are you still reading this? By Talos, Gordon Freeman could smash this
+# There is no Easter Eggs here, go away!
