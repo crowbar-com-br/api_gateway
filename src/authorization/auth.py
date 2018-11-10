@@ -1,11 +1,4 @@
-class Authorization:
-	"""The class for the authentication micro-service"""
-	token	= ""
-
-	def __init__(self, token):
-		self.token	= token
-
-def getToken(username, password, keys):
+def getToken(username, password, keys): # Still in test
 	import	json
 	import	requests
 	from	cryption	import cryptKey
