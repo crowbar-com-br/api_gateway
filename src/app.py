@@ -40,9 +40,8 @@ def microServices(body):
 @api.get()
 def test():
 	ms = microService.MicroService("TEste", "Testado", "slug", [
-		"youtube.com",
-		"google.com",
-		"gmail.com"
+		"http://192.168.0.1:8000",
+		"http://127.0.0.1:8080"
 	], "publicKey")
 	return microService.getURL(ms)
 
