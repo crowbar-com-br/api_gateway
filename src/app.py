@@ -1,11 +1,9 @@
-import	base64
 import	hug
 import	json
-import	requests
 from	authorization	import auth
 from	conx			import connex
 from	cryption		import cryptKey
-from	models			import MicroService
+from	ms				import microService
 
 api 				= hug.get(on_invalid=hug.redirect.not_found)
 key					= cryptKey.Key()
@@ -14,7 +12,7 @@ token_authenticated	= hug.authentication.token(auth.hug_checkToken)
 def save(data):
 	file = open("data_file.json", "r+")
 	file_open = file.read()
-	if (is_json(file_open)):
+	if (isJSON(file_open)):
 		content = json.loads(file_open)
 	else:
 		content = []
@@ -40,8 +38,13 @@ def microServices(body):
 	return load()
 
 @api.get()
-def test(request):
-	return cryptKey.newKey()
+def test():
+	ms = microService.MicroService("TEste", "Testado", "slug", [
+		"youtube.com",
+		"google.com",
+		"gmail.com"
+	], "publicKey")
+	return microService.getURL(ms)
 
 @api.get(
 	'/services/{slug}',
@@ -49,7 +52,7 @@ def test(request):
 	examples=	'http://localhost:8000/services/api_gateway',
 	requires=token_authenticated
 )
-def microService(slug):
+def createmicroService(slug):
 	"""Return the requested MicroService"""
 	microServices = load()
 	for microService in microServices:
@@ -63,7 +66,7 @@ def microService(slug):
 	examples='name=API&description=Description&slug=api_gateway&url=http://www.somethi.ng',
 	requires=token_authenticated
 )
-def microService(name, description, slug, url):
+def creartemicroService(name, description, slug, url):
 	"""Create a new MicroService"""
 	microService = MicroService(name, description, slug, [url])
 	save(microService.__dict__)
@@ -75,7 +78,7 @@ def microService(name, description, slug, url):
 )
 def getToken(body):
 	"""Get a token"""
-	if (is_json(body)):
+	if (isJSON(body)):
 		body 		= json.loads(body)
 		username	= body['username']
 		password	= body['password']
@@ -87,11 +90,23 @@ def getToken(body):
 	'/authentication',
 	version=1
 )
+
+@api.get(
+	'/status',
+	version=1
+)
+def getStatus():
+	import psutil
+	return {
+		'CPU'	: psutil.cpu_percent(),
+		'Memory': psutil.virtual_memory()[2]
+	}
+
 def checkToken(request):
 	"""Check if the token is still valid"""
 	return auth.checkToken(request)
 
-def is_json(myjson):
+def isJSON(myjson):
 	try:
 		json_object = json.loads(myjson)
 	except:
