@@ -23,7 +23,7 @@ def pingURL(url):
 	response	= requests.request("GET", url + "/status")
 	duration	= time.time() - start
 	response	= json.loads(response.text)
-	return ((response['CPU'] + response['Memory']) * duration)
+	return ((response['CPU'] * response['Memory']) / duration)
 
 def getURL(microService):
 	urls		= microService.urls
