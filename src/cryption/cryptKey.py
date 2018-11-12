@@ -42,7 +42,7 @@ def encryptData(
 
 def decryptData(
 		data	: "base64 wich will be decrypted",
-		key_pri	: "RSA Private Key object with the key used to decrypt")):
+		key_pri	: "RSA Private Key object with the key used to decrypt"):
 	"""Decrypt a base64 bytes and returns JSON data
 		-data: The base64 data received
 		-key_pri: Our key that we use to decrypt the data"""

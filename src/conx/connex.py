@@ -2,10 +2,10 @@ def sendRequest(
 		url			: "String URL of the MS with the port, eg:'http://sam.ple:8080'",
 		slug		: "String slug of the MS",
 		keys		: "Key object from cryptKey",
-		headers=""	: "Optional, JSON object",
-		payload=""	: "Optional, JSON object",
-		content=""	: "Optional, JSON object",
-		publicKey="": "Optional, String with Public Key dumped in DER format"):
+		headers		: "Optional, JSON object"	= "",
+		payload		: "Optional, JSON object"	= "",
+		content		: "Optional, JSON object"	= "",
+		publicKey	: "Optional, String with Public Key dumped in DER format"	= ""):
 	"""Method used to send encrypted POST request:
 		-url: The URL of the MS you will request
 		-slug: The slug of these MS
