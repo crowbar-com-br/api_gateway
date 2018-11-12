@@ -1,10 +1,12 @@
+# TODO: Document this
+
 class MicroService(object):
 	"""The class for the Micro-Services"""
 	name		= ""
 	description	= ""
 	slug		= ""
 	urls		= []
-	publicKey	= ""
+	token		= ""
 
 	def __init__(self, name, description, slug, urls, publicKey):
 		self.name			= name
@@ -33,8 +35,9 @@ def getURL(microService):
 	else:
 		for url in urls:
 			responses.append(pingURL(url))
-		lowest		= responses[0]
-		lowestURL	= urls[0]
+		if not response == False:
+			lowest		= responses[0]
+			lowestURL	= urls[0]
 		for index, response in enumerate(responses):
 			if not response == False:
 				if response < lowest and response > 0:

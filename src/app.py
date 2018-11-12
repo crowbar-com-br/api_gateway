@@ -33,17 +33,9 @@ def load():
 	version	=	1,
 	requires=token_authenticated
 )
-def microServices(body):
+def microServices():
 	"""Return the list of avaiables MicroServices"""
 	return load()
-
-@api.get()
-def test():
-	ms = microService.MicroService("TEste", "Testado", "slug", [
-		"http://192.168.0.1:8000",
-		"http://127.0.0.1:8080"
-	], "publicKey")
-	return microService.getURL(ms)
 
 @api.get(
 	'/services/{slug}',
@@ -51,7 +43,7 @@ def test():
 	examples=	'http://localhost:8000/services/api_gateway',
 	requires=token_authenticated
 )
-def createmicroService(slug):
+def createmicroService(slug: "A String slug of the MS you're loking for"):
 	"""Return the requested MicroService"""
 	microServices = load()
 	for microService in microServices:
@@ -71,41 +63,30 @@ def creartemicroService(name, description, slug, url):
 	save(microService.__dict__)
 	return microService.__dict__
 
-@api.post(
-	'/authentication',
-	version=1
-)
-def getToken(body):
-	"""Get a token"""
-	if (isJSON(body)):
-		body 		= json.loads(body)
-		username	= body['username']
-		password	= body['password']
-		return auth.getToken(username, password, key)
-	else:
-		return 403
-
 @api.get(
-	'/authentication',
+	'/publicKey',
 	version=1
 )
+def getPublicKey():
+	"""Returns the public key of this Micro-Service"""
+	return {
+		'publicKey'	: cryptKey.savePublic(key.public)
+	}
 
 @api.get(
 	'/status',
 	version=1
 )
 def getStatus():
+	"""Returns the actual status of this MS server"""
 	import psutil
 	return {
 		'CPU'	: psutil.cpu_percent(),
 		'Memory': psutil.virtual_memory()[2]
 	}
 
-def checkToken(request):
-	"""Check if the token is still valid"""
-	return auth.checkToken(request)
-
-def isJSON(myjson):
+def isJSON(myjson: "A expected JSON"):
+	"""Check if the param object can be a JSON"""
 	try:
 		json_object = json.loads(myjson)
 	except:
