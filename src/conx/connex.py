@@ -1,4 +1,11 @@
-def sendRequest(url, slug, keys, headers="", payload="", content="", publicKey=""):
+def sendRequest(
+		url			: "String URL of the MS with the port, eg:'http://sam.ple:8080'",
+		slug		: "String slug of the MS",
+		keys		: "Key object from cryptKey",
+		headers=""	: "Optional, JSON object",
+		payload=""	: "Optional, JSON object",
+		content=""	: "Optional, JSON object",
+		publicKey="": "Optional, String with Public Key dumped in DER format"):
 	"""Method used to send encrypted POST request:
 		-url: The URL of the MS you will request
 		-slug: The slug of these MS
@@ -10,6 +17,7 @@ def sendRequest(url, slug, keys, headers="", payload="", content="", publicKey="
 			now you're free \o/.
 		-publicKey: The public key of the MS (the string DER one), if you don't have, the method will
 			request it for you ;)"""
+
 	import	json
 	import	requests
 	from	cryption	import cryptKey
@@ -47,12 +55,16 @@ def sendRequest(url, slug, keys, headers="", payload="", content="", publicKey="
 
 	return requests.request("POST", url + slug, headers=request_headers, data=request_content) # TIME TO REQUEST!!
 
-def receiveRequest(request, body, keys):
+def receiveRequest(
+		request	: "Request object",
+		body	: "JSON data",
+		keys	: "Key object from cryptKey"):
 	"""Method used to decrypt the data from a encrypted POST request:
 		-request: the request object wich will contain the header....
 		-body: The body, a JSON body, wich contains ours precious data :3
 		-keys: A Key object from cryptKey, with it private and public key filled
 	'Hey, we got some request!! Time to work..''"""
+
 	import	json
 	from	cryption	import cryptKey
 
@@ -67,7 +79,11 @@ def receiveRequest(request, body, keys):
 
 	return data # And return it!!! \o/
 
-def sendResponse(keys, payload, content, publicKey):
+def sendResponse(
+		keys		:"Key object from cryptKey",
+		payload		:"JSON data",
+		content		:"JSON data",
+		publicKey	:"String with Public Key dumped in DER format"):
 	"""Method used to send encrypted POST response:
 		-keys: A Key object from cryptKey, with it private and public key filled
 		-payload: A payload, like a token wich you whant to
@@ -76,6 +92,7 @@ def sendResponse(keys, payload, content, publicKey):
 		'Now you are free to fill as you wish.'
 		-publicKey: The public key of the MS, the string DER one
 			'No, this time we need it, they send it to us, no? Or have you lost it?''"""
+
 	import	json
 	import	requests
 	from	cryption	import cryptKey
@@ -102,7 +119,9 @@ def sendResponse(keys, payload, content, publicKey):
 
 	return response_content # Seens okay, let's return it!!
 
-def receiveResponse(keys, response):
+def receiveResponse(
+		keys		: "Key object from cryptKey",
+		response	: "Response object from Request"):
 	"""Method used to decrypt the data from a encrypted POST response:
 		-keys: A Key object from cryptKey, with it private and public key filled
 		-response: The response object that they have send to you, wich contains encrypted data,
@@ -122,7 +141,7 @@ def receiveResponse(keys, response):
 
 	return data # Time to return!
 
-def getPublicKey(url):
+def getPublicKey(url: "String URL"):
 	"""Method used to retrive the public key from a MS"""
 	return json.loads(
 		requests.request("GET", url + "/publicKey").text
