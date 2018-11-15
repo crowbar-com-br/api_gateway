@@ -10,7 +10,7 @@ key					= cryptKey.Key()
 token_authenticated	= hug.authentication.token(auth.hug_checkToken)
 
 def save(data):
-	file = open("data_file.json", "r+")
+	file = open("./cache/data_file.json", "r+")
 	file_open = file.read()
 	if (isJSON(file_open)):
 		content = json.loads(file_open)
@@ -18,13 +18,13 @@ def save(data):
 		content = []
 	content.append(data)
 	file.close()
-	open("data_file.json", "w").close()
-	file = open("data_file.json", "r+")
+	open("./cache/data_file.json", "w").close()
+	file = open("./cache/data_file.json", "r+")
 	file.write(json.dumps(content))
 	file.close()
 
 def load():
-	with open("data_file.json", "r") as read_file:
+	with open("./cache/data_file.json", "r") as read_file:
 		data = json.load(read_file)
 	return data
 
@@ -38,17 +38,102 @@ def microServices():
 	return load()
 
 @api.get(
-	'/services/{slug}',
+	'/services/{ms}/{slug}',
 	version	=	1,
-	examples=	'http://localhost:8000/services/api_gateway',
-	requires=token_authenticated
+	examples=	'http://localhost:8000/services/api_gateway'
 )
-def createmicroService(slug: "A String slug of the MS you're loking for"):
-	"""Return the requested MicroService"""
-	microServices = load()
-	for microService in microServices:
-		if (microService['slug'] == slug):
-			return microService
+def getMSs(ms: "A String slug of the MS you're loking for", slug: "The slug of the option in the ms"):
+	"""Return the requested Micro-Service"""
+	slug	= "/" + slug
+	return getMS(ms, slug)
+
+@api.get(
+	'/services/{ms}/{slug}/{one}',
+	version	=	1,
+)
+def getMSs_one(ms, slug, one):
+	slug	= "/" + slug + "/" + one
+	return getMS(ms, slug)
+
+@api.get(
+	'/services/{ms}/{slug}/{one}/{two}',
+	version	=	1
+)
+def getMSs_two(ms, slug, one, two):
+	slug	= "/" + slug + "/" + one + "/" + two
+	return getMS(ms, slug)
+
+@api.get(
+	'/services/{ms}/{slug}/{one}/{two}/{three}',
+	version	=	1
+)
+def getMSs_three(ms, slug, one, two, three):
+	slug	= "/" + slug + "/" + one + "/" + two + "/" + three
+	return getMS(ms, slug)
+
+@api.get(
+	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}',
+	version	=	1
+)
+def getMSs_four(ms, slug, one, two, three, four):
+	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four
+	return getMS(ms, slug)
+
+@api.get(
+	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}',
+	version	=	1
+)
+def getMSs_five(ms, slug, one, two, three, four, five):
+	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five
+	return getMS(ms, slug)
+
+@api.get(
+	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}',
+	version	=	1
+)
+def getMSs_six(ms, slug, one, two, three, four, five, six):
+	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six
+	return getMS(ms, slug)
+
+@api.get(
+	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}/{seven}',
+	version	=	1
+)
+def getMSs_seven(ms, slug, one, two, three, four, five, six, seven):
+	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven
+	return getMS(ms, slug)
+
+@api.get(
+	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}/{seven}/{eight}',
+	version	=	1
+)
+def getMSs_eight(ms, slug, one, two, three, four, five, six, seven, eight):
+	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven + "/" + eight
+	return getMS(ms, slug)
+
+@api.get(
+	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}/{seven}/{eight}/{nine}',
+	version	=	1
+)
+def getMSs_nine(ms, slug, one, two, three, four, five, six, seven, eight, nine):
+	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven + "/" + eight + "/" + nine
+	return getMS(ms, slug)
+
+@api.get(
+	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}/{seven}/{eight}/{nine}/{ten}',
+	version	=	1
+)
+def getMSs_ten(ms, slug, one, two, three, four, five, six, seven, eight, nine, ten):
+	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven + "/" + eight + "/" + nine + "/" + ten
+	return getMS(ms, slug)
+
+def getMS(msSlug, slug):
+	import requests
+	microServices	= load()
+	for ms in microServices:
+		if (ms['slug'] == msSlug):
+			url	= microService.getURL(ms)
+			return json.loads(requests.request("GET", url + slug).text)
 	hug.redirect.not_found()
 
 @api.get(
@@ -85,10 +170,10 @@ def getStatus():
 		'Memory': psutil.virtual_memory()[2]
 	}
 
-def isJSON(myjson: "A expected JSON"):
-	"""Check if the param object can be a JSON"""
+def isJSON(content: "A expected JSON"):
+	"""Check if the param content can be a JSON"""
 	try:
-		json_object = json.loads(myjson)
+		object = json.loads(content)
 	except:
 		return False
 	return True

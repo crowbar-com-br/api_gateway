@@ -28,7 +28,7 @@ def pingURL(url):
 	return (response['CPU'] * response['Memory'] * duration)
 
 def getURL(microService):
-	urls		= microService.urls
+	urls		= microService['urls']
 	responses	= []
 	if urls.__len__() == 1:
 		return urls[0]
