@@ -1,7 +1,8 @@
 import	base64
 import	json
 import	rsa
-from cryptography.fernet import Fernet
+import	os
+from	cryptography.fernet	import Fernet
 
 class Key:
 	"""The class for the encrypt keys"""
@@ -88,8 +89,6 @@ def savePublic(publicKey: "RSA Public Key"):
 def loadKey(keys: "Key object from cryptKey"):
 	"""Loads or creates keys from a file
 		-keys: The Key objects from cryptKey"""
-
-	import os
 
 	if not os.path.exists('./cache'): # Let's check if we already have a place to store our keys
 		os.makedirs('./cache')

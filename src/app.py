@@ -141,7 +141,7 @@ def getMS(msSlug, slug):
 	version	=	1,
 	examples=	'http://localhost:8000/services/api_gateway'
 )
-def postMSs(ms: "A String slug of the MS you're loking for", slug: "The slug of the option in the ms", body):
+def postMSs(ms: "A String slug of the MS you're loking for", slug: "The slug of the option in the ms", body, request):
 	"""Return the requested Micro-Service"""
 	slug	= "/" + slug
 	return postMS(ms, slug, body, request)
@@ -230,6 +230,7 @@ def postMS(msSlug, slug, body, request):
 	import requests
 
 	microServices	= load() # Let's load the list of MS we have
+	body			= json.loads(body)
 
 	for ms in microServices: # Let's find if we have the requested
 		if (ms['slug'] == msSlug):

@@ -1,3 +1,7 @@
+import	json
+import	requests
+from	cryption	import cryptKey
+
 def sendRequest(
 		url			: "String URL of the MS with the port, eg:'http://sam.ple:8080'",
 		slug		: "String slug of the MS",
@@ -17,10 +21,6 @@ def sendRequest(
 			now you're free \o/.
 		-publicKey: The public key of the MS (the string DER one), if you don't have, the method will
 			request it for you ;)"""
-
-	import	json
-	import	requests
-	from	cryption	import cryptKey
 
 	request_headers	= {
 		'cache-control'	: "no-cache"
@@ -65,12 +65,9 @@ def receiveRequest(
 		-keys: A Key object from cryptKey, with it private and public key filled
 	'Hey, we got some request!! Time to work..''"""
 
-	import	json
-	from	cryption	import cryptKey
-
 	headers	= request.headers
-	payload	= criptKey.decryptData(body['payload'], keys.private) # Here we decrypt our precious payload
-	content	= criptKey.decryptContent(body['content'], payload['key']) # Now we use the key from the payload to decrypt the content
+	payload	= cryptKey.decryptData(body['payload'], keys.private) # Here we decrypt our precious payload
+	content	= cryptKey.decryptContent(body['content'], payload['key']) # Now we use the key from the payload to decrypt the content
 	data	= [
 		headers,
 		payload,
@@ -92,10 +89,6 @@ def sendResponse(
 		'Now you are free to fill as you wish.'
 		-publicKey: The public key of the MS, the string DER one
 			'No, this time we need it, they send it to us, no? Or have you lost it?''"""
-
-	import	json
-	import	requests
-	from	cryption	import cryptKey
 
 	key	= cryptKey.newKey(); # Yep, let's create a key for our data!
 
@@ -127,13 +120,11 @@ def receiveResponse(
 		-response: The response object that they have send to you, wich contains encrypted data,
 		encrypted with your public key
 			'Give me some PAYLOAD pleaaaaseee... :3'"""
-	import	json
-	from	cryption	import cryptKey
 
 	data	= json.loads(response.text) # Okay, let's load it!
 
-	payload	= criptKey.decryptData(data['payload'], keys.private) # MY PRECIOUS PAYLOAD!
-	content	= criptKey.decryptContent(data['content'], payload['key']) # your content...
+	payload	= cryptKey.decryptData(data['payload'], keys.private) # MY PRECIOUS PAYLOAD!
+	content	= cryptKey.decryptContent(data['content'], payload['key']) # your content...
 	data	= [
 		payload,
 		content
