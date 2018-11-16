@@ -5,7 +5,7 @@ def sendRequest(
 		headers		: "Optional, JSON object"	= "",
 		payload		: "Optional, JSON object"	= "",
 		content		: "Optional, JSON object"	= "",
-		publicKey	: "Optional, String with Public Key dumped in DER format"	= ""):
+		publicKey	: "Optional, String with Public Key dumped in DER format"""):
 	"""Method used to send encrypted POST request:
 		-url: The URL of the MS you will request
 		-slug: The slug of these MS
