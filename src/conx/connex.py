@@ -39,7 +39,7 @@ def sendRequest(
 		request_payload.update(payload) # Well, let's add your precious data
 
 	if publicKey == "":
-		getPublicKey(url) # Hmm, we need a public key to encrypt our precious data!!
+		publicKey	= getPublicKey(url) # Hmm, we need a public key to encrypt our precious data!!
 
 	request_content	= {
 		'payload'	: cryptKey.encryptData(request_payload, cryptKey.loadPublic(publicKey)), # okay, payload encrypted
@@ -53,7 +53,7 @@ def sendRequest(
 		}
 		request_content.update(data) # Okay, everything seens ready!
 
-	return requests.request("POST", url + slug, headers=request_headers, data=request_content) # TIME TO REQUEST!!
+	return requests.request("POST", url + slug, headers=request_headers, data=json.dumps(request_content)) # TIME TO REQUEST!!
 
 def receiveRequest(
 		request	: "Request object",
@@ -68,11 +68,12 @@ def receiveRequest(
 	headers	= request.headers
 	payload	= cryptKey.decryptData(body['payload'], keys.private) # Here we decrypt our precious payload
 	content	= cryptKey.decryptContent(body['content'], payload['key']) # Now we use the key from the payload to decrypt the content
-	data	= [
-		headers,
-		payload,
-		content
-	] # Let's organize this
+	del	payload['key']
+	data	= {
+		"headers"	: headers,
+		"payload"	: payload,
+		"content"	: content
+	} # Let's organize this
 
 	return data # And return it!!! \o/
 
@@ -97,10 +98,10 @@ def sendResponse(
 	}
 
 	if not payload == "":
-		request_payload.update(payload) # 'Hmm, what are you adding to our payload?'
+		response_payload.update(payload) # 'Hmm, what are you adding to our payload?'
 
 	response_content	= {
-		'payload'	: cryptKey.encryptData(request_payload, cryptKey.loadPublic(publicKey))
+		'payload'	: cryptKey.encryptData(response_payload, cryptKey.loadPublic(publicKey))
 	} # Let's encrypt our precious payload with the MS's public Key!!
 
 	if not content == "":
@@ -122,13 +123,13 @@ def receiveResponse(
 			'Give me some PAYLOAD pleaaaaseee... :3'"""
 
 	data	= json.loads(response.text) # Okay, let's load it!
-
 	payload	= cryptKey.decryptData(data['payload'], keys.private) # MY PRECIOUS PAYLOAD!
 	content	= cryptKey.decryptContent(data['content'], payload['key']) # your content...
-	data	= [
-		payload,
-		content
-	]
+	del	payload['key']
+	data	= {
+		"payload"	: payload,
+		"content"	: content
+	}
 
 	return data # Time to return!
 

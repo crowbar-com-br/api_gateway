@@ -39,7 +39,7 @@ def encryptData(
 		-key_pub: The public key of the MS that will read the data, we use this key to encrypt"""
 
 	data = json.dumps(data).encode('utf8') # Here we turn our data in bytes
-	return base64.b64encode(rsa.encrypt(data, key_pub)) # And here, we encrypt it! And then encode into base64, so we can send trough the network
+	return base64.b64encode(rsa.encrypt(data, key_pub)).decode('utf8') # And here, we encrypt it! And then encode into base64, so we can send trough the network
 
 def decryptData(
 		data	: "base64 wich will be decrypted",
@@ -59,7 +59,7 @@ def encryptContent(
 		-key: The string key that we will encrypt it! Obs: this key encrypt and decrypt the data, so beware"""
 
 	data = json.dumps(data).encode('utf8')
-	return base64.b64encode(Fernet(key.encode('utf8')).encrypt(data)) # Here we encrypt our major data
+	return base64.b64encode(Fernet(key.encode('utf8')).encrypt(data)).decode('utf8') # Here we encrypt our major data
 
 def decryptContent(
 		data	: "JSON wich will be encrypted",
