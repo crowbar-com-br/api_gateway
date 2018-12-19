@@ -1,49 +1,44 @@
-def getToken(username, password, keys): # Still in test
-	import	json
-	import	requests
-	from	cryption	import cryptKey
+import	json
+from	conx	import connex
 
-	url = "http://localhost:8080/getToken"
+def receiveToken(request, body, keys, url, msSlug, slug):
+	import	app
+	import requests
+	from falcon import HTTPUnauthorized
+	from	ms				import microService
 
-	headers = {
-		'cache-control'	: "no-cache"
+	microServices	= app.load() # Let's load the list of MS we have
+	body			= json.loads(body)
+
+	for ms in microServices: # Let's find if we have the requested
+		if (ms['slug'] == msSlug):
+			url			= microService.getURL(ms) # Let's get the best URL of the requested MS
+			publicKey	= body['publicKey'] # Let's get the requester Public Key
+			data		= connex.receiveRequest(request, body, keys) # Okay, let's decrypt our received request
+			response	= connex.sendRequest(url, slug, keys, data['headers'], data['payload'], data['content']) # Let's encrypt and request the designed MS
+			data		= connex.receiveResponse(keys, response) # Now decrypt the response received from the MS
+			return data['content']['status']
+
+	return None
+
+def checkToken(token, keys, url):
+	import app
+
+	payload		= {
+		"Authorization"	: token
 	}
 
-	payload = {
-		'username'	: username,
-		'password'	: password
-	}
-
-	auth_pubKey = json.loads(
-		requests.request("GET", "http://localhost:8080/publicKey").text
-	)['publicKey']
-
-	payload	= {
-		'payload'	: cryptKey.encryptData(payload, cryptKey.loadPublic(auth_pubKey)),
-		'publicKey'	: cryptKey.savePublic(keys.public)
-	}
-
-	response = requests.request("POST", url, headers=headers, data=payload)
-	data = json.loads(response.text)
-	return cryptKey.decryptData(data['payload'], keys.private)
-
-def checkToken(request):
-	import	requests
-
-	authorization = request.get_header("Authorization")
-
-	if 'Bearer' in authorization:
-		url = "http://localhost:8080/token_authenticated"
-
-		headers = {
-			'cache-control': "no-cache",
-			'Authorization': authorization.replace('Bearer ', '')
-		}
-
-		response = requests.request("GET", url, headers=headers)
-		return response.status_code
-	else:
-		return 403
+	response	= app.sendRequest(
+		url,
+		"/services/authentication/statusToken",
+		keys,
+		"",
+		payload,
+		{"":""},
+		""
+	)
+	print(response.text)
+	return		connex.receiveResponse(keys, response)
 
 def hug_checkToken(token):
 	import	requests

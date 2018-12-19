@@ -6,8 +6,7 @@ from	cryption		import cryptKey
 from	ms				import microService
 
 api 				= hug.get(on_invalid=hug.redirect.not_found)
-key					= cryptKey.Key()
-token_authenticated	= hug.authentication.token(auth.hug_checkToken)
+keys 				= cryptKey.Key()
 
 def save(data):
 	file = open("./cache/data_file.json", "r+")
@@ -28,14 +27,14 @@ def load():
 		data = json.load(read_file)
 	return data
 
-@api.get(
+@api.post(
 	'/services',
-	version	=	1,
-	requires=token_authenticated
+	version	=	1
 )
-def microServices():
+def microServices(request, body):
 	"""Return the list of avaiables MicroServices"""
-	return load()
+	if auth.receiveToken(request, body, keys, "http://localhost:8000", "authentication", "/statusToken"):
+		return connex.sendResponse(keys, "", load(), json.loads(body)['publicKey'])
 
 @api.get(
 	'/services/{ms}/{slug}',
@@ -236,17 +235,16 @@ def postMS(msSlug, slug, body, request):
 		if (ms['slug'] == msSlug):
 			url			= microService.getURL(ms) # Let's get the best URL of the requested MS
 			publicKey	= body['publicKey'] # Let's get the requester Public Key
-			data		= connex.receiveRequest(request, body, key) # Okay, let's decrypt our received request
-			response	= connex.sendRequest(url, slug, key, data['headers'], data['payload'], data['content']) # Let's encrypt and request the designed MS
-			data		= connex.receiveResponse(key, response) # Now decrypt the response received from the MS
-			return		  connex.sendResponse(key, data['payload'], data['content'], publicKey) # And now, let's return a encrypted response to the requester
+			data		= connex.receiveRequest(request, body, keys) # Okay, let's decrypt our received request
+			response	= connex.sendRequest(url, slug, keys, data['headers'], data['payload'], data['content']) # Let's encrypt and request the designed MS
+			data		= connex.receiveResponse(keys, response) # Now decrypt the response received from the MS
+			return		  connex.sendResponse(keys, data['payload'], data['content'], publicKey) # And now, let's return a encrypted response to the requester
 	hug.redirect.not_found() # Oho, we don't have the requested MS
 
 @api.get(
 	'/create',
 	version=1,
-	examples='name=API&description=Description&slug=api_gateway&url=http://www.somethi.ng',
-	requires=token_authenticated
+	examples='name=API&description=Description&slug=api_gateway&url=http://www.somethi.ng'
 )
 def creartemicroService(name, description, slug, url):
 	"""Create a new MicroService"""
@@ -261,7 +259,7 @@ def creartemicroService(name, description, slug, url):
 def getPublicKey():
 	"""Returns the public key of this Micro-Service"""
 	return {
-		'publicKey'	: cryptKey.savePublic(key.public)
+		'publicKey'	: cryptKey.savePublic(keys.public)
 	}
 
 @api.get(
