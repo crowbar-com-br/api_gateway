@@ -5,11 +5,11 @@ from	conx			import connex
 from	cryption		import cryptKey
 from	ms				import microService
 
-api 				= hug.get(on_invalid=hug.redirect.not_found)
-keys 				= cryptKey.Key()
+api 	= hug.get(on_invalid=hug.redirect.not_found)
+keys 	= cryptKey.Key()
 
 def save(data):
-	file = open("./cache/data_file.json", "r+")
+	file = open("./.cache/data_file.json", "r+")
 	file_open = file.read()
 	if (isJSON(file_open)):
 		content = json.loads(file_open)
@@ -17,13 +17,13 @@ def save(data):
 		content = []
 	content.append(data)
 	file.close()
-	open("./cache/data_file.json", "w").close()
-	file = open("./cache/data_file.json", "r+")
+	open("./.cache/data_file.json", "w").close()
+	file = open("./.cache/data_file.json", "r+")
 	file.write(json.dumps(content))
 	file.close()
 
 def load():
-	with open("./cache/data_file.json", "r") as read_file:
+	with open("./.cache/data_file.json", "r") as read_file:
 		data = json.load(read_file)
 	return data
 
