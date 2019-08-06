@@ -91,89 +91,89 @@ def getMS(ms: "A String slug of the MS you're loking for"):
 	version	=	1,
 	examples=	'http://localhost:8000/services/api_gateway'
 )
-def getMSs(ms: "A String slug of the MS you're loking for", slug: "The slug of the option in the ms"):
+def getMSs(request, ms: "A String slug of the MS you're loking for", slug: "The slug of the option in the ms"):
 	"""Return the requested Micro-Service"""
-	slug	= "/" + slug
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_get(ms, slug)
 # TODO: THIS IS RIDICULOUS, PLEASE, FIND A BETTER WAY!!
 @api.get(
 	'/services/{ms}/{slug}/{one}',
 	version	=	1,
 )
-def getMSs_one(ms, slug, one):
-	slug	= "/" + slug + "/" + one
+def getMSs_one(request, ms, slug, one):
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}',
 	version	=	1
 )
-def getMSs_two(ms, slug, one, two):
-	slug	= "/" + slug + "/" + one + "/" + two
+def getMSs_two(request, ms, slug, one, two):
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}/{three}',
 	version	=	1
 )
-def getMSs_three(ms, slug, one, two, three):
-	slug	= "/" + slug + "/" + one + "/" + two + "/" + three
+def getMSs_three(request, ms, slug, one, two, three):
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}',
 	version	=	1
 )
-def getMSs_four(ms, slug, one, two, three, four):
-	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four
+def getMSs_four(request, ms, slug, one, two, three, four):
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}',
 	version	=	1
 )
-def getMSs_five(ms, slug, one, two, three, four, five):
-	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five
+def getMSs_five(request, ms, slug, one, two, three, four, five):
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}',
 	version	=	1
 )
-def getMSs_six(ms, slug, one, two, three, four, five, six):
-	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six
+def getMSs_six(request, ms, slug, one, two, three, four, five, six):
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}/{seven}',
 	version	=	1
 )
-def getMSs_seven(ms, slug, one, two, three, four, five, six, seven):
-	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven
+def getMSs_seven(request, ms, slug, one, two, three, four, five, six, seven):
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}/{seven}/{eight}',
 	version	=	1
 )
-def getMSs_eight(ms, slug, one, two, three, four, five, six, seven, eight):
-	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven + "/" + eight
+def getMSs_eight(request, ms, slug, one, two, three, four, five, six, seven, eight):
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}/{seven}/{eight}/{nine}',
 	version	=	1
 )
-def getMSs_nine(ms, slug, one, two, three, four, five, six, seven, eight, nine):
-	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven + "/" + eight + "/" + nine
+def getMSs_nine(request, ms, slug, one, two, three, four, five, six, seven, eight, nine):
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}/{seven}/{eight}/{nine}/{ten}',
 	version	=	1
 )
-def getMSs_ten(ms, slug, one, two, three, four, five, six, seven, eight, nine, ten):
-	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven + "/" + eight + "/" + nine + "/" + ten
+def getMSs_ten(request, ms, slug, one, two, three, four, five, six, seven, eight, nine, ten):
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_get(ms, slug)
 
 # def getMS(msSlug, slug):
@@ -192,7 +192,7 @@ def getMSs_ten(ms, slug, one, two, three, four, five, six, seven, eight, nine, t
 )
 def postMSs(ms: "A String slug of the MS you're loking for", slug: "The slug of the option in the ms", body, request):
 	"""Return the requested Micro-Service"""
-	slug	= "/" + slug
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_post(ms, slug, body, request)
 
 @api.post(
@@ -200,7 +200,7 @@ def postMSs(ms: "A String slug of the MS you're loking for", slug: "The slug of 
 	version	=	1,
 )
 def postMSs_one(ms, slug, body, request, one):
-	slug	= "/" + slug + "/" + one
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_post(ms, slug, body, request)
 
 @api.post(
@@ -208,7 +208,7 @@ def postMSs_one(ms, slug, body, request, one):
 	version	=	1
 )
 def postMSs_two(ms, slug, body, request, one, two):
-	slug	= "/" + slug + "/" + one + "/" + two
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_post(ms, slug, body, request)
 
 @api.post(
@@ -216,7 +216,7 @@ def postMSs_two(ms, slug, body, request, one, two):
 	version	=	1
 )
 def postMSs_three(ms, slug, body, request, one, two, three):
-	slug	= "/" + slug + "/" + one + "/" + two + "/" + three
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_post(ms, slug, body, request)
 
 @api.post(
@@ -224,7 +224,7 @@ def postMSs_three(ms, slug, body, request, one, two, three):
 	version	=	1
 )
 def postMSs_four(ms, slug, body, request, one, two, three, four):
-	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_post(ms, slug, body, request)
 
 @api.post(
@@ -232,7 +232,7 @@ def postMSs_four(ms, slug, body, request, one, two, three, four):
 	version	=	1
 )
 def postMSs_five(ms, slug, body, request, one, two, three, four, five):
-	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_post(ms, slug, body, request)
 
 @api.post(
@@ -240,7 +240,7 @@ def postMSs_five(ms, slug, body, request, one, two, three, four, five):
 	version	=	1
 )
 def postMSs_six(ms, slug, body, request, one, two, three, four, five, six):
-	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_post(ms, slug, body, request)
 
 @api.post(
@@ -248,7 +248,7 @@ def postMSs_six(ms, slug, body, request, one, two, three, four, five, six):
 	version	=	1
 )
 def postMSs_seven(ms, slug, body, request, one, two, three, four, five, six, seven):
-	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_post(ms, slug, body, request)
 
 @api.post(
@@ -256,7 +256,7 @@ def postMSs_seven(ms, slug, body, request, one, two, three, four, five, six, sev
 	version	=	1
 )
 def postMSs_eight(ms, slug, body, request, one, two, three, four, five, six, seven, eight):
-	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven + "/" + eight
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_post(ms, slug, body, request)
 
 @api.post(
@@ -264,7 +264,7 @@ def postMSs_eight(ms, slug, body, request, one, two, three, four, five, six, sev
 	version	=	1
 )
 def postMSs_nine(ms, slug, body, request, one, two, three, four, five, six, seven, eight, nine):
-	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven + "/" + eight + "/" + nine
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_post(ms, slug, body, request)
 
 @api.post(
@@ -272,7 +272,7 @@ def postMSs_nine(ms, slug, body, request, one, two, three, four, five, six, seve
 	version	=	1
 )
 def postMSs_ten(ms, slug, body, request, one, two, three, four, five, six, seven, eight, nine, ten):
-	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven + "/" + eight + "/" + nine + "/" + ten
+	slug	= request.relative_uri.partition(ms)[2]
 	return ms_post(ms, slug, body, request)
 
 # def postMS(msSlug, slug, body, request): # Disabled for now
