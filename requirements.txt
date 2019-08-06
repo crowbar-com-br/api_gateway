@@ -3,4 +3,3 @@ gunicorn
 rsa
 cryptography
 psutil
-pymongo
