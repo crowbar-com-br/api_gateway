@@ -1,6 +1,7 @@
 import	hug
 import	json
 import	os
+import	requests
 from	authorization	import auth
 from	conx			import connex
 from	cryption		import cryptKey
@@ -58,6 +59,24 @@ def createMicroService(
 	save(ms.__dict__)
 	return ms.__dict__
 
+def ms_get(msSlug, slug):
+	microServices	= load() # Get a list of our MSs
+	for ms in microServices:
+		if (ms['slug'] == msSlug):
+			url	= microService.getURL(ms) # Get the best URL of this MS
+			return json.loads(requests.request("GET", url + slug).text) # Make a GET request to this MS
+	hug.redirect.not_found() #Uho, we don't have this MS
+
+def ms_post(msSlug, slug, body, request):
+	microServices	= load() # Let's load the list of MS we have
+	body			= json.loads(body)
+
+	for ms in microServices: # Let's find if we have the requested
+		if (ms['slug'] == msSlug):
+			url			= microService.getURL(ms) # Let's get the best URL of the requested MS
+			return json.loads(requests.request("POST", url + slug, body).text)
+	hug.redirect.not_found() # Oho, we don't have the requested MS
+
 @api.get(
 	'/services/{ms}',
 	version	=	1,
@@ -65,7 +84,7 @@ def createMicroService(
 )
 def getMS(ms: "A String slug of the MS you're loking for"):
 	"""Return the requested Micro-Service"""
-	return getMS(ms, "")
+	return ms_get(ms, "")
 
 @api.get(
 	'/services/{ms}/{slug}',
@@ -75,7 +94,7 @@ def getMS(ms: "A String slug of the MS you're loking for"):
 def getMSs(ms: "A String slug of the MS you're loking for", slug: "The slug of the option in the ms"):
 	"""Return the requested Micro-Service"""
 	slug	= "/" + slug
-	return getMS(ms, slug)
+	return ms_get(ms, slug)
 # TODO: THIS IS RIDICULOUS, PLEASE, FIND A BETTER WAY!!
 @api.get(
 	'/services/{ms}/{slug}/{one}',
@@ -83,7 +102,7 @@ def getMSs(ms: "A String slug of the MS you're loking for", slug: "The slug of t
 )
 def getMSs_one(ms, slug, one):
 	slug	= "/" + slug + "/" + one
-	return getMS(ms, slug)
+	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}',
@@ -91,7 +110,7 @@ def getMSs_one(ms, slug, one):
 )
 def getMSs_two(ms, slug, one, two):
 	slug	= "/" + slug + "/" + one + "/" + two
-	return getMS(ms, slug)
+	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}/{three}',
@@ -99,7 +118,7 @@ def getMSs_two(ms, slug, one, two):
 )
 def getMSs_three(ms, slug, one, two, three):
 	slug	= "/" + slug + "/" + one + "/" + two + "/" + three
-	return getMS(ms, slug)
+	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}',
@@ -107,7 +126,7 @@ def getMSs_three(ms, slug, one, two, three):
 )
 def getMSs_four(ms, slug, one, two, three, four):
 	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four
-	return getMS(ms, slug)
+	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}',
@@ -115,7 +134,7 @@ def getMSs_four(ms, slug, one, two, three, four):
 )
 def getMSs_five(ms, slug, one, two, three, four, five):
 	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five
-	return getMS(ms, slug)
+	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}',
@@ -123,7 +142,7 @@ def getMSs_five(ms, slug, one, two, three, four, five):
 )
 def getMSs_six(ms, slug, one, two, three, four, five, six):
 	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six
-	return getMS(ms, slug)
+	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}/{seven}',
@@ -131,7 +150,7 @@ def getMSs_six(ms, slug, one, two, three, four, five, six):
 )
 def getMSs_seven(ms, slug, one, two, three, four, five, six, seven):
 	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven
-	return getMS(ms, slug)
+	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}/{seven}/{eight}',
@@ -139,7 +158,7 @@ def getMSs_seven(ms, slug, one, two, three, four, five, six, seven):
 )
 def getMSs_eight(ms, slug, one, two, three, four, five, six, seven, eight):
 	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven + "/" + eight
-	return getMS(ms, slug)
+	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}/{seven}/{eight}/{nine}',
@@ -147,7 +166,7 @@ def getMSs_eight(ms, slug, one, two, three, four, five, six, seven, eight):
 )
 def getMSs_nine(ms, slug, one, two, three, four, five, six, seven, eight, nine):
 	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven + "/" + eight + "/" + nine
-	return getMS(ms, slug)
+	return ms_get(ms, slug)
 
 @api.get(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}/{seven}/{eight}/{nine}/{ten}',
@@ -155,16 +174,16 @@ def getMSs_nine(ms, slug, one, two, three, four, five, six, seven, eight, nine):
 )
 def getMSs_ten(ms, slug, one, two, three, four, five, six, seven, eight, nine, ten):
 	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven + "/" + eight + "/" + nine + "/" + ten
-	return getMS(ms, slug)
+	return ms_get(ms, slug)
 
-def getMS(msSlug, slug):
-	import requests
-	microServices	= load() # Get a list of our MSs
-	for ms in microServices:
-		if (ms['slug'] == msSlug):
-			url	= microService.getURL(ms) # Get the best URL of this MS
-			return json.loads(requests.request("GET", url + slug).text) # Make a GET request to this MS
-	hug.redirect.not_found() #Uho, we don't have this MS
+# def getMS(msSlug, slug):
+# 	import requests
+# 	microServices	= load() # Get a list of our MSs
+# 	for ms in microServices:
+# 		if (ms['slug'] == msSlug):
+# 			url	= microService.getURL(ms) # Get the best URL of this MS
+# 			return json.loads(requests.request("GET", url + slug).text) # Make a GET request to this MS
+# 	hug.redirect.not_found() #Uho, we don't have this MS
 
 @api.post(
 	'/services/{ms}/{slug}',
@@ -174,7 +193,7 @@ def getMS(msSlug, slug):
 def postMSs(ms: "A String slug of the MS you're loking for", slug: "The slug of the option in the ms", body, request):
 	"""Return the requested Micro-Service"""
 	slug	= "/" + slug
-	return postMS(ms, slug, body, request)
+	return ms_post(ms, slug, body, request)
 
 @api.post(
 	'/services/{ms}/{slug}/{one}',
@@ -182,7 +201,7 @@ def postMSs(ms: "A String slug of the MS you're loking for", slug: "The slug of 
 )
 def postMSs_one(ms, slug, body, request, one):
 	slug	= "/" + slug + "/" + one
-	return postMS(ms, slug, body, request)
+	return ms_post(ms, slug, body, request)
 
 @api.post(
 	'/services/{ms}/{slug}/{one}/{two}',
@@ -190,7 +209,7 @@ def postMSs_one(ms, slug, body, request, one):
 )
 def postMSs_two(ms, slug, body, request, one, two):
 	slug	= "/" + slug + "/" + one + "/" + two
-	return postMS(ms, slug, body, request)
+	return ms_post(ms, slug, body, request)
 
 @api.post(
 	'/services/{ms}/{slug}/{one}/{two}/{three}',
@@ -198,7 +217,7 @@ def postMSs_two(ms, slug, body, request, one, two):
 )
 def postMSs_three(ms, slug, body, request, one, two, three):
 	slug	= "/" + slug + "/" + one + "/" + two + "/" + three
-	return postMS(ms, slug, body, request)
+	return ms_post(ms, slug, body, request)
 
 @api.post(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}',
@@ -206,7 +225,7 @@ def postMSs_three(ms, slug, body, request, one, two, three):
 )
 def postMSs_four(ms, slug, body, request, one, two, three, four):
 	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four
-	return postMS(ms, slug, body, request)
+	return ms_post(ms, slug, body, request)
 
 @api.post(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}',
@@ -214,7 +233,7 @@ def postMSs_four(ms, slug, body, request, one, two, three, four):
 )
 def postMSs_five(ms, slug, body, request, one, two, three, four, five):
 	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five
-	return postMS(ms, slug, body, request)
+	return ms_post(ms, slug, body, request)
 
 @api.post(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}',
@@ -222,7 +241,7 @@ def postMSs_five(ms, slug, body, request, one, two, three, four, five):
 )
 def postMSs_six(ms, slug, body, request, one, two, three, four, five, six):
 	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six
-	return postMS(ms, slug, body, request)
+	return ms_post(ms, slug, body, request)
 
 @api.post(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}/{seven}',
@@ -230,7 +249,7 @@ def postMSs_six(ms, slug, body, request, one, two, three, four, five, six):
 )
 def postMSs_seven(ms, slug, body, request, one, two, three, four, five, six, seven):
 	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven
-	return postMS(ms, slug, body, request)
+	return ms_post(ms, slug, body, request)
 
 @api.post(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}/{seven}/{eight}',
@@ -238,7 +257,7 @@ def postMSs_seven(ms, slug, body, request, one, two, three, four, five, six, sev
 )
 def postMSs_eight(ms, slug, body, request, one, two, three, four, five, six, seven, eight):
 	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven + "/" + eight
-	return postMS(ms, slug, body, request)
+	return ms_post(ms, slug, body, request)
 
 @api.post(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}/{seven}/{eight}/{nine}',
@@ -246,7 +265,7 @@ def postMSs_eight(ms, slug, body, request, one, two, three, four, five, six, sev
 )
 def postMSs_nine(ms, slug, body, request, one, two, three, four, five, six, seven, eight, nine):
 	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven + "/" + eight + "/" + nine
-	return postMS(ms, slug, body, request)
+	return ms_post(ms, slug, body, request)
 
 @api.post(
 	'/services/{ms}/{slug}/{one}/{two}/{three}/{four}/{five}/{six}/{seven}/{eight}/{nine}/{ten}',
@@ -254,23 +273,23 @@ def postMSs_nine(ms, slug, body, request, one, two, three, four, five, six, seve
 )
 def postMSs_ten(ms, slug, body, request, one, two, three, four, five, six, seven, eight, nine, ten):
 	slug	= "/" + slug + "/" + one + "/" + two + "/" + three + "/" + four + "/" + five + "/" + six + "/" + seven + "/" + eight + "/" + nine + "/" + ten
-	return postMS(ms, slug, body, request)
+	return ms_post(ms, slug, body, request)
 
-def postMS(msSlug, slug, body, request):
-	import requests
-
-	microServices	= load() # Let's load the list of MS we have
-	body			= json.loads(body)
-
-	for ms in microServices: # Let's find if we have the requested
-		if (ms['slug'] == msSlug):
-			url			= microService.getURL(ms) # Let's get the best URL of the requested MS
-			publicKey	= body['publicKey'] # Let's get the requester Public Key
-			data		= connex.receiveRequest(request, body, keys) # Okay, let's decrypt our received request
-			response	= connex.sendRequest(url, slug, keys, data['headers'], data['payload'], data['content']) # Let's encrypt and request the designed MS
-			data		= connex.receiveResponse(keys, response) # Now decrypt the response received from the MS
-			return		  connex.sendResponse(keys, data['payload'], data['content'], publicKey) # And now, let's return a encrypted response to the requester
-	hug.redirect.not_found() # Oho, we don't have the requested MS
+# def postMS(msSlug, slug, body, request): # Disabled for now
+# 	import requests
+#
+# 	microServices	= load() # Let's load the list of MS we have
+# 	body			= json.loads(body)
+#
+# 	for ms in microServices: # Let's find if we have the requested
+# 		if (ms['slug'] == msSlug):
+# 			url			= microService.getURL(ms) # Let's get the best URL of the requested MS
+# 			publicKey	= body['publicKey'] # Let's get the requester Public Key
+# 			data		= connex.receiveRequest(request, body, keys) # Okay, let's decrypt our received request
+# 			response	= connex.sendRequest(url, slug, keys, data['headers'], data['payload'], data['content']) # Let's encrypt and request the designed MS
+# 			data		= connex.receiveResponse(keys, response) # Now decrypt the response received from the MS
+# 			return		  connex.sendResponse(keys, data['payload'], data['content'], publicKey) # And now, let's return a encrypted response to the requester
+# 	hug.redirect.not_found() # Oho, we don't have the requested MS
 
 @api.get(
 	'/publicKey',
