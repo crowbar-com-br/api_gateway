@@ -6,14 +6,12 @@ class MicroService(object):
 	description	= ""
 	slug		= ""
 	urls		= []
-	token		= ""
 
-	def __init__(self, name, description, slug, urls, publicKey):
+	def __init__(self, name, description, slug, urls):
 		self.name			= name
 		self.description	= description
 		self.slug			= slug
 		self.urls			= urls
-		self.publicKey		= publicKey
 
 def pingURL(url):
 	import	json

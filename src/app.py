@@ -1,5 +1,6 @@
 import	hug
 import	json
+import	os
 from	authorization	import auth
 from	conx			import connex
 from	cryption		import cryptKey
@@ -23,18 +24,48 @@ def save(data):
 	file.close()
 
 def load():
-	with open("./.cache/data_file.json", "r") as read_file:
-		data = json.load(read_file)
-	return data
+	if not os.path.exists('./.cache/data_file.json'):
+		with open("./.cache/data_file.json", "w") as file:
+			file.write("[]")
+			file.close()
+		return load()
+	else:
+		with open("./.cache/data_file.json", "r") as read_file:
+			data = json.load(read_file)
+		return data
+
+@api.get(
+	'/services',
+	version=1
+)
+def microServices():
+	return load()
 
 @api.post(
-	'/services',
-	version	=	1
+	'/create',
+	version=1,
+	examples='name=API&description=Description&slug=api_gateway&url=http://www.somethi.ng'
 )
-def microServices(request, body):
-	"""Return the list of avaiables MicroServices"""
-	if auth.receiveToken(request, body, keys, "http://localhost:8000", "authentication", "/statusToken"):
-		return connex.sendResponse(keys, "", load(), json.loads(body)['publicKey'])
+def createMicroService(
+	name,
+	description,
+	slug,
+	url,
+	response
+):
+	"""Create a new MicroService"""
+	ms	= microService.MicroService(name, description, slug, [url])
+	save(ms.__dict__)
+	return ms.__dict__
+
+@api.get(
+	'/services/{ms}',
+	version	=	1,
+	examples=	'http://localhost:8000/services/api_gateway'
+)
+def getMS(ms: "A String slug of the MS you're loking for"):
+	"""Return the requested Micro-Service"""
+	return getMS(ms, "")
 
 @api.get(
 	'/services/{ms}/{slug}',
@@ -240,17 +271,6 @@ def postMS(msSlug, slug, body, request):
 			data		= connex.receiveResponse(keys, response) # Now decrypt the response received from the MS
 			return		  connex.sendResponse(keys, data['payload'], data['content'], publicKey) # And now, let's return a encrypted response to the requester
 	hug.redirect.not_found() # Oho, we don't have the requested MS
-
-@api.get(
-	'/create',
-	version=1,
-	examples='name=API&description=Description&slug=api_gateway&url=http://www.somethi.ng'
-)
-def createMicroService(name, description, slug, url):
-	"""Create a new MicroService"""
-	microService = MicroService(name, description, slug, [url])
-	save(microService.__dict__)
-	return microService.__dict__
 
 @api.get(
 	'/publicKey',
