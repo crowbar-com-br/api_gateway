@@ -9,7 +9,7 @@ def sendRequest(
 		headers		: "Optional, JSON object"	= "",
 		payload		: "Optional, JSON object"	= "",
 		content		: "Optional, JSON object"	= "",
-		publicKey	: "Optional, String with Public Key dumped in DER format""" = ""):
+		publicKey	: "Optional, String with Public Key dumped in DER format" = ""):
 	"""Method used to send encrypted POST request:
 		-url: The URL of the MS you will request
 		-slug: The slug of these MS
@@ -18,9 +18,9 @@ def sendRequest(
 		-payload: A payload, like a token wich you whant to add to the request,
 		 	yep, JSON baby. obs: It need to be lesser than 150 Bytes
 		-content: A big content of data wich you want to send to the MS, still JSON,
-			now you're free \o/.
+			now you're free \\o/.
 		-publicKey: The public key of the MS (the string DER one), if you don't have, the method will
-			request it for you ;)"""
+			request it for you ;) """
 
 	request_headers	= {
 		'cache-control'	: "no-cache"

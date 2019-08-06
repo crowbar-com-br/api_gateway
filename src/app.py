@@ -246,7 +246,7 @@ def postMS(msSlug, slug, body, request):
 	version=1,
 	examples='name=API&description=Description&slug=api_gateway&url=http://www.somethi.ng'
 )
-def creartemicroService(name, description, slug, url):
+def createMicroService(name, description, slug, url):
 	"""Create a new MicroService"""
 	microService = MicroService(name, description, slug, [url])
 	save(microService.__dict__)
